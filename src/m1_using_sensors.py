@@ -3,8 +3,8 @@ This module lets you practice the use of robot sensors.
 
 Authors: David Mutchler, Vibha Alangar, Matt Boutell, Dave Fisher,
          Mark Hays, Amanda Stouder, Aaron Wilkin, their colleagues,
-         and PUT_YOUR_NAME_HERE.
-"""  # TODO: 1. PUT YOUR NAME IN THE ABOVE LINE.
+         and Hongyu Liu.
+"""  # done: 1. PUT YOUR NAME IN THE ABOVE LINE.
 
 import ev3dev.ev3 as ev3
 import time
@@ -25,7 +25,7 @@ import math
 def main():
     """ Calls the testing functions. """
     # Un-comment out these tests as you implement the methods they test.
-    # run_test_beep_and_tone()
+    run_test_beep_and_tone()
     # run_test_go_straight_for_seconds()
     # run_test_go_straight_for_inches_using_time()
     # run_test_go_straight_for_inches_using_sensor()
@@ -57,8 +57,15 @@ def run_test_beep_and_tone():
     #   in increments of 10, with 50 millisecond durations.
     #   Do not forget to apply the   wait   method to tone, as usual.
     # -------------------------------------------------------------------------
+    b = Beeper()
+    for k in range(10):
+        b.beep().wait()
+        time.sleep(3)
 
-
+    for i in range(5):
+        t = ToneMaker()
+        t.tone(150 + i * 5, 1)
+        time.sleep(3)
 # -----------------------------------------------------------------------------
 # TODO 5:  With your instructor, do quiz questions XXX through XXX.
 #          After you understand the answers to those questions,
@@ -355,8 +362,16 @@ class DriveSystem(object):
         self.go_straight_for_seconds(seconds, speed)
 
     def go_straight_for_inches_using_sensor(self, inches, speed):
-        pass
-        # Live code this with students
+
+        inches_per_degree = self.left_motor.WheelCircumference / 300
+        desired_degrees = inches / inches_per_degree
+        distance_gone = 0
+        self.left_motor.reset_position()
+        self.go(speed,speed)
+        while True:
+            if distance_gone >= desired_degrees:
+                self.stop()
+
 
     def go_straight_until_black(self, speed):
         """
@@ -387,7 +402,9 @@ class DriveSystem(object):
 #   -- TouchSensor
 #   -- ColorSensor
 #   -- IR_DistanceSensor
-#   --
+#   -- Beeper
+#   -- ToneMaker
+#   -- InfraredProximitySensor
 # USE them, but do NOT modify them.
 ###############################################################################
 class Motor(object):
